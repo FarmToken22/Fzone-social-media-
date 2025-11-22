@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Post</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            max-width: 680px;
+            margin: 0 auto 20px;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* Create Post Card */
+        .create-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* User Info */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e4e6eb;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #050505;
+        }
+
+        /* Post Textarea */
+        .post-textarea {
+            width: 100%;
+            min-height: 200px;
+            border: none;
+            font-size: 16px;
+            resize: vertical;
+            outline: none;
+            color: #050505;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .post-textarea::placeholder {
+            color: #8a8d91;
+        }
+
+        /* Character Count */
+        .char-count {
+            text-align: right;
+            font-size: 13px;
+            color: #65676b;
+            margin-bottom: 15px;
+        }
+
+        .char-count.warning {
+            color: #d32f2f;
+        }
+
+        /* Link Input Section */
+        .link-section {
+            margin-bottom: 20px;
+        }
+
+        .link-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .link-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e4e6eb;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border 0.3s;
+        }
+
+        .link-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .add-link-btn {
+            padding: 12px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .add-link-btn:hover {
+            background: #5568d3;
+        }
+
+        .add-link-btn:disabled {
+            background: #bcc0c4;
+            cursor: not-allowed;
+        }
+
+        /* Link Preview */
+        .link-preview {
+            display: none;
+            border: 1px solid #e4e6eb;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 15px;
+            position: relative;
+        }
+
+        .link-preview.show {
+            display: block;
+        }
+
+        .link-preview-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f0f2f5;
+        }
+
+        .link-preview-content {
+            padding: 15px;
+        }
+
+        .link-preview-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #050505;
+            margin-bottom: 5px;
+        }
+
+        .link-preview-description {
+            font-size: 14px;
+            color: #65676b;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .link-preview-url {
+            font-size: 13px;
+            color: #8a8d91;
+            text-decoration: none;
+        }
+
+        .remove-link-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Action Buttons */
+        .post-actions {
+            display: flex;
+            gap: 10px;
+            padding-top: 15px;
+            border-top: 1px solid #e4e6eb;
+        }
+
+        .action-item {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #e4e6eb;
+            background: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #65676b;
+            transition: all 0.3s;
+        }
+
+        .action-item:hover {
+            background: #f0f2f5;
+        }
+
+        .action-item.active {
+            background: #e7f3ff;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        /* Submit Button */
+        .submit-section {
+            margin-top: 20px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #bcc0c4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Loading State */
+        .loading-text {
+            display: none;
+        }
+
+        .submit-btn.loading .normal-text {
+            display: none;
+        }
+
+        .submit-btn.loading .loading-text {
+            display: inline;
+        }
+
+        /* Error/Success Messages */
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .error-message {
+            background: #ffe0e0;
+            color: #d32f2f;
+            border-left: 4px solid #d32f2f;
+        }
+
+        .success-message {
+            background: #e0f7e0;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .create-card {
+                padding: 15px;
+            }
+
+            .post-textarea {
+                min-height: 150px;
+            }
+
+            .link-input-group {
+                flex-direction: column;
+            }
+
+            .add-link-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1 class="header-title">New Post</h1>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="create-card">
+            <!-- User Info -->
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div class="user-name" id="userName">User</div>
+            </div>
+
+            <!-- Messages -->
+            <div id="errorMessage" class="message error-message"></div>
+            <div id="successMessage" class="message success-message"></div>
+
+            <!-- Post Content -->
+            <textarea 
+                class="post-textarea" 
+                id="postContent" 
+                placeholder="What's on your mind? Share your thoughts..."
+                maxlength="5000"
+            ></textarea>
+
+            <div class="char-count" id="charCount">0 / 5000</div>
+
+            <!-- Link Section -->
+            <div class="link-section">
+                <div class="link-input-group">
+                    <input 
+                        type="url" 
+                        class="link-input" 
+                        id="linkInput" 
+                        placeholder="Add a link (optional)"
+                    >
+                    <button class="add-link-btn" id="addLinkBtn">🔗 Add Link</button>
+                </div>
+
+                <!-- Link Preview -->
+                <div class="link-preview" id="linkPreview">
+                    <button class="remove-link-btn" id="removeLinkBtn">×</button>
+                    <img class="link-preview-image" id="previewImage" src="" alt="">
+                    <div class="link-preview-content">
+                        <div class="link-preview-title" id="previewTitle"></div>
+                        <div class="link-preview-description" id="previewDescription"></div>
+                        <a class="link-preview-url" id="previewUrl" href="" target="_blank"></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post Actions -->
+            <div class="post-actions">
+                <button class="action-item" id="addLinkAction">🔗 Link</button>
+                <button class="action-item">📷 Photo</button>
+                <button class="action-item">😊 Feeling</button>
+                <button class="action-item">📍 Location</button>
+            </div>
+
+            <!-- Submit Section -->
+            <div class="submit-section">
+                <button class="submit-btn" id="submitBtn">
+                    <span class="normal-text">Post</span>
+                    <span class="loading-text">⏳ Posting...</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase & Scripts -->
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="utils.js"></script>
+    <script type="module" src="upload.js"></script>
+    <script type="module" src="create-post.js"></script>
+</body>
+</html>
