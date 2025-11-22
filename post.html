@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post - Fzone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            padding-top: 56px;
+            padding-bottom: 60px;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid #e1e8ed;
+            z-index: 1000;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+        }
+
+        .back-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            color: #14171a;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 24px;
+        }
+
+        .back-btn:hover {
+            background: rgba(29, 161, 242, 0.1);
+        }
+
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .navbar-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #14171a;
+        }
+
+        /* Container */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Post Card */
+        .post-card {
+            background: white;
+            border-bottom: 1px solid #e1e8ed;
+            padding: 16px;
+        }
+
+        .post-header {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .post-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #1da1f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .post-info {
+            flex: 1;
+        }
+
+        .post-author-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .post-author {
+            font-weight: 700;
+            font-size: 15px;
+            color: #14171a;
+        }
+
+        .post-username {
+            font-size: 15px;
+            color: #657786;
+        }
+
+        .post-time {
+            color: #657786;
+            font-size: 15px;
+            margin-top: 2px;
+        }
+
+        .post-content {
+            color: #14171a;
+            font-size: 23px;
+            line-height: 28px;
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .link-preview {
+            border: 1px solid #e1e8ed;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .link-preview:hover {
+            opacity: 0.9;
+        }
+
+        .link-preview-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            background: #f7f9fa;
+        }
+
+        .link-preview-content {
+            padding: 12px;
+        }
+
+        .link-preview-title {
+            font-weight: 600;
+            font-size: 15px;
+            color: #14171a;
+            margin-bottom: 4px;
+        }
+
+        .link-preview-description {
+            font-size: 15px;
+            color: #657786;
+            line-height: 20px;
+            margin-bottom: 6px;
+        }
+
+        .link-preview-url {
+            font-size: 15px;
+            color: #657786;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 20px;
+            padding: 12px 0;
+            border-bottom: 1px solid #e1e8ed;
+            font-size: 15px;
+        }
+
+        .stat-item {
+            color: #657786;
+        }
+
+        .stat-number {
+            font-weight: 700;
+            color: #14171a;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .post-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border: none;
+            background: none;
+            color: #657786;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .post-action-btn:hover {
+            background: rgba(29, 161, 242, 0.1);
+            color: #1da1f2;
+        }
+
+        .post-action-btn.liked {
+            color: #e0245e;
+        }
+
+        .post-action-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Comments Section */
+        .comments-wrapper {
+            background: white;
+        }
+
+        .comments-header {
+            padding: 16px;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .comments-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #14171a;
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e1e8ed;
+            transition: background 0.2s;
+        }
+
+        .comment-item:hover {
+            background: #f7f9fa;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #1da1f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .comment-content-wrapper {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .comment-author-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+
+        .comment-author {
+            font-weight: 700;
+            font-size: 15px;
+            color: #14171a;
+        }
+
+        .comment-username {
+            font-size: 15px;
+            color: #657786;
+        }
+
+        .comment-time {
+            font-size: 15px;
+            color: #657786;
+        }
+
+        .comment-text {
+            font-size: 15px;
+            color: #14171a;
+            line-height: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .comment-edited {
+            color: #657786;
+            font-size: 13px;
+            margin-left: 4px;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        .comment-action {
+            border: none;
+            background: none;
+            color: #657786;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .comment-action:hover {
+            color: #1da1f2;
+        }
+
+        /* Add Comment */
+        .add-comment-wrapper {
+            display: flex;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .add-comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #1da1f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .comment-input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #e1e8ed;
+            border-radius: 20px;
+            font-size: 15px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .comment-input:focus {
+            border-color: #1da1f2;
+        }
+
+        .comment-submit-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: #1da1f2;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .comment-submit-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .comment-submit-btn:hover:not(:disabled) {
+            background: #0c85d0;
+        }
+
+        .comment-submit-btn:disabled {
+            background: #bcc0c4;
+            cursor: not-allowed;
+        }
+
+        /* Empty State */
+        .empty-comments {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-comments svg {
+            width: 64px;
+            height: 64px;
+            stroke: #657786;
+            opacity: 0.5;
+            margin-bottom: 16px;
+        }
+
+        .empty-comments-text {
+            font-size: 31px;
+            font-weight: 700;
+            color: #14171a;
+            margin-bottom: 8px;
+        }
+
+        .empty-comments-subtext {
+            font-size: 15px;
+            color: #657786;
+        }
+
+        /* Loading & Error */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #657786;
+            font-size: 15px;
+        }
+
+        .error-message {
+            background: #ffebe9;
+            color: #e0245e;
+            padding: 12px 16px;
+            margin: 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e1e8ed;
+            z-index: 1000;
+            display: flex;
+            height: 60px;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.2s;
+            padding: 0;
+        }
+
+        .nav-item:active {
+            background-color: rgba(29, 161, 242, 0.1);
+        }
+
+        .nav-icon {
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-icon svg {
+            width: 26px;
+            height: 26px;
+            stroke: #14171a;
+            stroke-width: 2;
+        }
+
+        .nav-item.active .nav-icon svg {
+            stroke: #1da1f2;
+            stroke-width: 2.5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+            }
+
+            .post-content {
+                font-size: 17px;
+                line-height: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <button class="back-btn" onclick="window.history.back()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <h1 class="navbar-title">Post</h1>
+    </nav>
+
+    <div class="container">
+        <div id="errorMessage" class="error-message"></div>
+        <div id="loadingIndicator" class="loading">Loading...</div>
+        <div id="postContainer"></div>
+
+        <!-- Comments Section -->
+        <div class="comments-wrapper" id="commentsSection" style="display: none;">
+            <div class="comments-header">
+                <h3 class="comments-title" id="commentsCount">Comments</h3>
+            </div>
+            
+            <!-- Add Comment -->
+            <div class="add-comment-wrapper">
+                <div class="add-comment-avatar" id="userCommentAvatar">U</div>
+                <div class="comment-input-wrapper">
+                    <input 
+                        type="text" 
+                        class="comment-input" 
+                        id="commentInput" 
+                        placeholder="Post your reply"
+                        maxlength="500"
+                    >
+                    <button class="comment-submit-btn" id="commentSubmitBtn" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="commentsList"></div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item" onclick="window.location.href='feed.html'">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+            </span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='search.html'">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+            </span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='create-post.html'">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 8v8m-4-4h8"></path>
+                </svg>
+            </span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='notifications.html'" style="position: relative;">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+            </span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='profile.html'">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </span>
+        </button>
+    </nav>
+
+    <script type="module">
+        import { auth, database } from './firebase-config.js';
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { ref, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import { formatTimeAgo, getInitials } from './utils.js';
+        import { togglePostLike, hasUserLiked } from './like.js';
+        import { createComment, listenToComments } from './comment.js';
+
+        let currentUser = null;
+        let currentPost = null;
+        let commentsUnsubscribe = null;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                updateUserAvatar(user);
+                if (postId) {
+                    loadPost(postId);
+                } else {
+                    showError('Post not found');
+                }
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        function updateUserAvatar(user) {
+            const displayName = user.displayName || user.email.split('@')[0];
+            const initials = getInitials(displayName);
+            document.getElementById('userCommentAvatar').textContent = initials;
+        }
+
+        async function loadPost(postId) {
+            try {
+                const postRef = ref(database, `posts/${postId}`);
+                const snapshot = await get(postRef);
+
+                document.getElementById('loadingIndicator').style.display = 'none';
+
+                if (snapshot.exists()) {
+                    currentPost = { id: postId, ...snapshot.val() };
+                    await displayPost(currentPost);
+                    document.getElementById('commentsSection').style.display = 'block';
+                    loadComments(postId);
+                } else {
+                    showError('Post not found');
+                }
+            } catch (error) {
+                console.error('Error loading post:', error);
+                showError('Failed to load post');
+                document.getElementById('loadingIndicator').style.display = 'none';
+            }
+        }
+
+        async function displayPost(post) {
+            const container = document.getElementById('postContainer');
+            const initials = getInitials(post.authorName);
+            const timeAgo = formatTimeAgo(post.createdAt);
+
+            const likeStatus = await hasUserLiked(post.id, currentUser.uid);
+            const likedClass = likeStatus.liked ? 'liked' : '';
+
+            let linkHtml = '';
+            if (post.link) {
+                linkHtml = `
+                    <div class="link-preview" onclick="window.open('${post.link.url}', '_blank')">
+                        <img class="link-preview-image" src="${post.link.image}" alt="">
+                        <div class="link-preview-content">
+                            <div class="link-preview-title">${escapeHtml(post.link.title)}</div>
+                            <div class="link-preview-description">${escapeHtml(post.link.description)}</div>
+                            <div class="link-preview-url">${escapeHtml(post.link.domain)}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-avatar">${initials}</div>
+                        <div class="post-info">
+                            <div class="post-author-row">
+                                <span class="post-author">${escapeHtml(post.authorName)}</span>
+                                <span class="post-username">@${post.authorName.toLowerCase().replace(/\s+/g, '')}</span>
+                            </div>
+                            <div class="post-time">${timeAgo}</div>
+                        </div>
+                    </div>
+                    <div class="post-content">${escapeHtml(post.content)}</div>
+                    ${linkHtml}
+                    <div class="post-stats">
+                        <span class="stat-item"><span class="stat-number" id="statsComments">${post.comments || 0}</span> Comments</span>
+                        <span class="stat-item"><span class="stat-number" id="statsLikes">${post.likes || 0}</span> Likes</span>
+                    </div>
+                    <div class="post-actions">
+                        <button class="post-action-btn" id="commentFocusBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </button>
+                        <button class="post-action-btn ${likedClass}" id="likeBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </button>
+                        <button class="post-action-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                                <polyline points="16 6 12 2 8 6"></polyline>
+                                <line x1="12" y1="2" x2="12" y2="15"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('likeBtn').addEventListener('click', handleLike);
+            document.getElementById('commentFocusBtn').addEventListener('click', () => {
+                document.getElementById('commentInput').focus();
+            });
+        }
+
+        async function handleLike() {
+            const likeBtn = document.getElementById('likeBtn');
+            likeBtn.disabled = true;
+
+            const result = await togglePostLike(currentPost.id, currentUser.uid);
+
+            if (result.success) {
+                if (result.liked) {
+                    likeBtn.classList.add('liked');
+                } else {
+                    likeBtn.classList.remove('liked');
+                }
+                currentPost.likes = result.newLikes;
+                document.getElementById('statsLikes').textContent = result.newLikes;
+            }
+
+            likeBtn.disabled = false;
+        }
+
+        function loadComments(postId) {
+            commentsUnsubscribe = listenToComments(postId, (result) => {
+                if (result.success) {
+                    displayComments(result.comments);
+                    document.getElementById('commentsCount').textContent = 
+                        `${result.comments.length} Comment${result.comments.length !== 1 ? 's' : ''}`;
+                    document.getElementById('statsComments').textContent = result.comments.length;
+                    currentPost.comments = result.comments.length;
+                }
+            });
+        }
+
+        function displayComments(comments) {
+            const container = document.getElementById('commentsList');
+
+            if (comments.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-comments">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <div class="empty-comments-text">No comments yet</div>
+                        <div class="empty-comments-subtext">Be the first to comment!</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            comments.forEach(comment => {
+                const commentEl = createCommentElement(comment);
+                container.appendChild(commentEl);
+            });
+        }
+
+        function createCommentElement(comment) {
+            const div = document.createElement('div');
+            div.className = 'comment-item';
+
+            const initials = getInitials(comment.authorName);
+            const timeAgo = formatTimeAgo(comment.createdAt);
+            const editedText = comment.edited ? '<span class="comment-edited">(edited)</span>' : '';
+
+            div.innerHTML = `
+                <div class="comment-avatar">${initials}</div>
+                <div class="comment-content-wrapper">
+                    <div class="comment-author-row">
+                        <span class="comment-author">${escapeHtml(comment.authorName)}</span>
+                        <span class="comment-username">@${comment.authorName.toLowerCase().replace(/\s+/g, '')}</span>
+                        <span class="comment-time">· ${timeAgo}</span>
+                    </div>
+                    <div class="comment-text">${escapeHtml(comment.content)}${editedText}</div>
+                    <div class="comment-actions">
+                        <button class="comment-action">Like</button>
+                        <button class="comment-action">Reply</button>
+                    </div>
+                </div>
+            `;
+
+            return div;
+        }
+
+        const commentInput = document.getElementById('commentInput');
+        const commentSubmitBtn = document.getElementById('commentSubmitBtn');
+
+        commentInput.addEventListener('input', () => {
+            commentSubmitBtn.disabled = commentInput.value.trim().length === 0;
+        });
+
+        commentInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && commentInput.value.trim()) {
+                handleCommentSubmit();
+            }
+        });
+
+        commentSubmitBtn.addEventListener('click', handleCommentSubmit);
+
+        async function handleCommentSubmit() {
+            const content = commentInput.value.trim();
+            if (!content) return;
+
+            commentSubmitBtn.disabled = true;
+
+            const commentData = {
+                content: content,
+                authorId: currentUser.uid,
+                authorName: currentUser.displayName || currentUser.email.split('@')[0],
+                authorEmail: currentUser.email
+            };
+
+            const result = await createComment(currentPost.id, commentData);
+
+            if (result.success) {
+                commentInput.value = '';
+            } else {
+                showError(result.error || 'Failed to post comment');
+            }
+
+            commentSubmitBtn.disabled = false;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            setTimeout(() => errorDiv.classList.remove('show'), 5000);
+        }
+
+        window.addEventListener('beforeunload', () => {
+            if (commentsUnsubscribe) commentsUnsubscribe();
+        });
+    </script>
+</body>
+</html>

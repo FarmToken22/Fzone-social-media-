@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="components.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding-top: 60px;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #050505;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .settings-section {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #8a8d91;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f2f5;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-item:hover {
+            background: #f0f2f5;
+            margin: 0 -16px;
+            padding: 14px 16px;
+            border-radius: 8px;
+        }
+
+        .settings-icon {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            background: #f0f2f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-right: 12px;
+        }
+
+        .settings-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .settings-label {
+            font-size: 15px;
+            font-weight: 500;
+            color: #050505;
+            margin-bottom: 2px;
+        }
+
+        .settings-description {
+            font-size: 13px;
+            color: #65676b;
+        }
+
+        .settings-arrow {
+            font-size: 18px;
+            color: #65676b;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            border-radius: 28px;
+            transition: 0.4s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.4s;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        .danger-item {
+            color: #d32f2f;
+        }
+
+        .danger-item .settings-label {
+            color: #d32f2f;
+        }
+
+        .app-version {
+            text-align: center;
+            padding: 20px;
+            color: #8a8d91;
+            font-size: 13px;
+        }
+
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .confirm-modal.show {
+            display: flex;
+        }
+
+        .confirm-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .confirm-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #050505;
+        }
+
+        .confirm-text {
+            font-size: 15px;
+            color: #65676b;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .confirm-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .confirm-btn.cancel {
+            background: #f0f2f5;
+            color: #050505;
+        }
+
+        .confirm-btn.confirm {
+            background: #d32f2f;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1 class="navbar-title">⚙️ Settings</h1>
+    </nav>
+
+    <div class="container">
+        <!-- Account Settings -->
+        <div class="settings-section">
+            <div class="section-title">Account</div>
+            
+            <div class="settings-item" onclick="window.location.href='profile.html'">
+                <div class="settings-icon">👤</div>
+                <div class="settings-content">
+                    <div class="settings-label">Edit Profile</div>
+                    <div class="settings-description">Change name and bio</div>
+                </div>
+                <div class="settings-arrow">›</div>
+            </div>
+
+            <div class="settings-item" id="changePasswordBtn">
+                <div class="settings-icon">🔒</div>
+                <div class="settings-content">
+                    <div class="settings-label">Change Password</div>
+                    <div class="settings-description">Update your password</div>
+                </div>
+                <div class="settings-arrow">›</div>
+            </div>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div class="settings-section">
+            <div class="section-title">Privacy</div>
+            
+            <div class="settings-item">
+                <div class="settings-icon">🔔</div>
+                <div class="settings-content">
+                    <div class="settings-label">Notifications</div>
+                    <div class="settings-description">Enable/disable push notifications</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="notificationToggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div class="settings-item">
+                <div class="settings-icon">👁️</div>
+                <div class="settings-content">
+                    <div class="settings-label">Profile Visibility</div>
+                    <div class="settings-description">Everyone can view profile</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="profileVisibilityToggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- App Settings -->
+        <div class="settings-section">
+            <div class="section-title">Application</div>
+            
+            <div class="settings-item" onclick="window.location.href='admin/ads-manager.html'">
+                <div class="settings-icon">📢</div>
+                <div class="settings-content">
+                    <div class="settings-label">Ads Manager</div>
+                    <div class="settings-description">Create and manage advertisements</div>
+                </div>
+                <div class="settings-arrow">›</div>
+            </div>
+            
+            <div class="settings-item" onclick="window.location.href='notifications.html'">
+                <div class="settings-icon">🔔</div>
+                <div class="settings-content">
+                    <div class="settings-label">View Notifications</div>
+                    <div class="settings-description">See all notifications</div>
+                </div>
+                <div class="settings-arrow">›</div>
+            </div>
+
+            <div class="settings-item" id="clearCacheBtn">
+                <div class="settings-icon">🗑️</div>
+                <div class="settings-content">
+                    <div class="settings-label">Clear Cache</div>
+                    <div class="settings-description">Clean app data</div>
+                </div>
+                <div class="settings-arrow">›</div>
+            </div>
+        </div>
+
+        <!-- About -->
+        <div class="settings-section">
+            <div class="section-title">About</div>
+            
+            <div class="settings-item" onclick="window.location.href='docs/privacy-policy.html'">
+                <div class="settings-icon">🔒</div>
+                <div class="settings-content">
+                    <div class="settings-label">Privacy Policy</div>
+                    <div class="settings-description">How your data is used</div>
+                </div>
+                <div class="settings-arrow">›</div>
+            </div>
+
+            <div class="settings-item" onclick="window.location.href='docs/terms.html'">
+                <div class="settings-icon">📜</div>
+                <div class="settings-content">
+                    <div class="settings-label">Terms & Conditions</div>
+                    <div class="settings-description">Usage rules and terms</div>
+                </div>
+                <div class="settings-arrow">›</div>
+            </div>
+            
+            <div class="settings-item" id="aboutBtn">
+                <div class="settings-icon">ℹ️</div>
+                <div class="settings-content">
+                    <div class="settings-label">About App</div>
+                    <div class="settings-description">Version and information</div>
+                </div>
+                <div class="settings-arrow">›</div>
+            </div>
+
+            <div class="settings-item" id="helpBtn">
+                <div class="settings-icon">❓</div>
+                <div class="settings-content">
+                    <div class="settings-label">Help & Support</div>
+                    <div class="settings-description">Help center</div>
+                </div>
+                <div class="settings-arrow">›</div>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="settings-section">
+            <div class="section-title">Danger Zone</div>
+            
+            <div class="settings-item danger-item" id="deleteAccountBtn">
+                <div class="settings-icon">⚠️</div>
+                <div class="settings-content">
+                    <div class="settings-label">Delete Account</div>
+                    <div class="settings-description">Permanently delete your account</div>
+                </div>
+                <div class="settings-arrow">›</div>
+            </div>
+        </div>
+
+        <div class="app-version">
+            Social Feed v1.0.0<br>
+            © 2025 All rights reserved
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="confirm-modal" id="confirmModal">
+        <div class="confirm-content">
+            <h3 class="confirm-title" id="confirmTitle">Confirm</h3>
+            <p class="confirm-text" id="confirmText">Are you sure?</p>
+            <div class="confirm-buttons">
+                <button class="confirm-btn cancel" id="cancelBtn">Cancel</button>
+                <button class="confirm-btn confirm" id="confirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth } from './firebase-config.js';
+        import { onAuthStateChanged, signOut, deleteUser } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        let currentUser = null;
+        let confirmAction = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Delete Account
+        document.getElementById('deleteAccountBtn').addEventListener('click', () => {
+            showConfirmModal(
+                '⚠️ Delete Account',
+                'Are you sure you want to permanently delete your account? This action cannot be undone.',
+                async () => {
+                    try {
+                        await deleteUser(currentUser);
+                        alert('Account deleted successfully');
+                        window.location.href = 'index.html';
+                    } catch (error) {
+                        alert('Failed to delete account. Please log in again and try.');
+                    }
+                }
+            );
+        });
+
+        // Clear Cache
+        document.getElementById('clearCacheBtn').addEventListener('click', () => {
+            showConfirmModal(
+                '🗑️ Clear Cache',
+                'All cache data will be deleted. The app will run faster.',
+                () => {
+                    localStorage.clear();
+                    alert('Cache cleared successfully!');
+                }
+            );
+        });
+
+        // About
+        document.getElementById('aboutBtn').addEventListener('click', () => {
+            alert('Social Feed v1.0.0\n\nA modern social media application\n\nMade with ❤️');
+        });
+
+        // Help
+        document.getElementById('helpBtn').addEventListener('click', () => {
+            alert('Need help?\n\nFor support, email us at:\nsupport@socialfeed.com');
+        });
+
+        // Change Password
+        document.getElementById('changePasswordBtn').addEventListener('click', () => {
+            alert('Password change feature coming soon!');
+        });
+
+        // Confirm Modal
+        function showConfirmModal(title, text, onConfirm) {
+            document.getElementById('confirmTitle').textContent = title;
+            document.getElementById('confirmText').textContent = text;
+            confirmAction = onConfirm;
+            document.getElementById('confirmModal').classList.add('show');
+        }
+
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+            document.getElementById('confirmModal').classList.remove('show');
+            confirmAction = null;
+        });
+
+        document.getElementById('confirmBtn').addEventListener('click', () => {
+            if (confirmAction) {
+                confirmAction();
+            }
+            document.getElementById('confirmModal').classList.remove('show');
+            confirmAction = null;
+        });
+
+        // Toggle switches
+        document.getElementById('notificationToggle').addEventListener('change', (e) => {
+            console.log('Notifications:', e.target.checked ? 'On' : 'Off');
+        });
+
+        document.getElementById('profileVisibilityToggle').addEventListener('change', (e) => {
+            console.log('Profile visibility:', e.target.checked ? 'Public' : 'Private');
+        });
+    </script>
+</body>
+</html>
